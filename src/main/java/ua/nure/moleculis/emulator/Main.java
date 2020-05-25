@@ -7,14 +7,13 @@ import ua.nure.moleculis.emulator.http.models.responses.MessageDTO;
 import ua.nure.moleculis.emulator.http.models.responses.PeopleResponse;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         final MoleculisClient moleculisClient = new MoleculisClient();
         final BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 
@@ -35,7 +34,8 @@ public class Main {
         }
         while (working) {
             try {
-                println("1 - Find people");
+                println("1 - Verify access token");
+                println("2 - Find people");
                 println("0 - Exit");
 
                 final int result = Integer.parseInt(in.readLine());
@@ -45,6 +45,11 @@ public class Main {
                         working = false;
                         break;
                     case 1:
+                        println("\nVerifying token...");
+                        final boolean valid = moleculisClient.verifyToken(accessToken).getResult();
+                        println("Token valid: " + valid);
+                        break;
+                    case 2:
                         println("\nLooking for people nearby...");
                         println("Found:\n");
                         final PeopleResponse peopleNearby = moleculisClient.finPeople(accessToken);

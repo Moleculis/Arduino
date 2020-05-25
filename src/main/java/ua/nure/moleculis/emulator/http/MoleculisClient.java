@@ -8,6 +8,7 @@ import kong.unirest.HttpResponse;
 import kong.unirest.UnirestInstance;
 import kong.unirest.json.JSONObject;
 import lombok.SneakyThrows;
+import ua.nure.moleculis.emulator.http.models.responses.BooleanResponse;
 import ua.nure.moleculis.emulator.http.models.responses.LoginResponse;
 import ua.nure.moleculis.emulator.http.models.responses.MessageDTO;
 import ua.nure.moleculis.emulator.http.models.responses.PeopleResponse;
@@ -42,6 +43,16 @@ public class MoleculisClient {
                 .get(baseUrl + "/users/nearby")
                 .header("Authorization", "Bearer " + accessToken)
                 .asObject(PeopleResponse.class);
+
+        return response.getBody();
+    }
+
+    public BooleanResponse verifyToken(String accessToken) {
+        final HttpResponse<BooleanResponse> response = unirest
+                .get(baseUrl + "/users/tokenValid")
+                .header("Content-Type", "application/json")
+                .queryString("token", accessToken)
+                .asObject(BooleanResponse.class);
 
         return response.getBody();
     }
