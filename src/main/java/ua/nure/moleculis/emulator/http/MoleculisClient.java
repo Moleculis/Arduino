@@ -9,7 +9,10 @@ import kong.unirest.UnirestInstance;
 import kong.unirest.json.JSONObject;
 import lombok.SneakyThrows;
 import ua.nure.moleculis.emulator.http.models.responses.LoginResponse;
+import ua.nure.moleculis.emulator.http.models.responses.MessageDTO;
 import ua.nure.moleculis.emulator.http.models.responses.PeopleResponse;
+
+import java.util.List;
 
 public class MoleculisClient {
     private final UnirestInstance unirest;
@@ -39,6 +42,20 @@ public class MoleculisClient {
                 .get(baseUrl + "/users/nearby")
                 .header("Authorization", "Bearer " + accessToken)
                 .asObject(PeopleResponse.class);
+
+        return response.getBody();
+    }
+
+    public MessageDTO sendContactRequests(List<String> usernames, String accessToken) {
+        var body = new JSONObject()
+                .put("usernames", usernames);
+
+        final HttpResponse<MessageDTO> response = unirest
+                .post(baseUrl + "/users/send_contact_requests")
+                .body(body)
+                .header("Content-Type", "application/json")
+                .header("Authorization", "Bearer " + accessToken)
+                .asObject(MessageDTO.class);
 
         return response.getBody();
     }

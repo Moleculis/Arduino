@@ -3,6 +3,7 @@ package ua.nure.moleculis.emulator;
 
 import ua.nure.moleculis.emulator.http.MoleculisClient;
 import ua.nure.moleculis.emulator.http.models.UserResponse;
+import ua.nure.moleculis.emulator.http.models.responses.MessageDTO;
 import ua.nure.moleculis.emulator.http.models.responses.PeopleResponse;
 
 import java.io.BufferedReader;
@@ -56,7 +57,12 @@ public class Main {
                         for (String id : idsString.split(",")) {
                             ids.add(Long.parseLong(id));
                         }
-                        print(ids);
+                        List<String> usernames = new ArrayList<>();
+                        for (Long id : ids) {
+                            final String username = getUserUsernameById(peopleNearby.getUsers(), id);
+                            usernames.add(username);
+                        }
+                        final MessageDTO response = moleculisClient.sendContactRequests(usernames, accessToken);
                         break;
                     default:
                         println("\nUnknown command");
@@ -66,6 +72,15 @@ public class Main {
                 println("Wrong input");
             }
         }
+    }
+
+    static String getUserUsernameById(List<UserResponse> userResponses, Long id) {
+        for (UserResponse userResponse : userResponses) {
+            if (userResponse.getId().equals(id)) {
+                return userResponse.getUsername();
+            }
+        }
+        return null;
     }
 
     public static void print(Object message) {
