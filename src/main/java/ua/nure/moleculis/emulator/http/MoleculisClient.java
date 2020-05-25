@@ -8,6 +8,8 @@ import kong.unirest.HttpResponse;
 import kong.unirest.UnirestInstance;
 import kong.unirest.json.JSONObject;
 import lombok.SneakyThrows;
+import ua.nure.moleculis.emulator.http.models.responses.LoginResponse;
+import ua.nure.moleculis.emulator.http.models.responses.PeopleResponse;
 
 public class MoleculisClient {
     private final UnirestInstance unirest;
@@ -27,6 +29,16 @@ public class MoleculisClient {
                 .body(body)
                 .header("Content-Type", "application/json")
                 .asObject(LoginResponse.class);
+
+        return response.getBody();
+    }
+
+    public PeopleResponse finPeople(String accessToken) {
+
+        final HttpResponse<PeopleResponse> response = unirest
+                .get(baseUrl + "/users/nearby")
+                .header("Authorization", "Bearer " + accessToken)
+                .asObject(PeopleResponse.class);
 
         return response.getBody();
     }

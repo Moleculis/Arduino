@@ -2,10 +2,14 @@ package ua.nure.moleculis.emulator;
 
 
 import ua.nure.moleculis.emulator.http.MoleculisClient;
+import ua.nure.moleculis.emulator.http.models.UserResponse;
+import ua.nure.moleculis.emulator.http.models.responses.PeopleResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Main {
@@ -30,7 +34,7 @@ public class Main {
         }
         while (working) {
             try {
-                println("1 - Verify token");
+                println("1 - Find people");
                 println("0 - Exit");
 
                 final int result = Integer.parseInt(in.readLine());
@@ -40,7 +44,19 @@ public class Main {
                         working = false;
                         break;
                     case 1:
-                        println("\nVerifying Token...");
+                        println("\nLooking for people nearby...");
+                        println("Found:\n");
+                        final PeopleResponse peopleNearby = moleculisClient.finPeople(accessToken);
+                        for (UserResponse user : peopleNearby.getUsers()) {
+                            println("Id: " + user.getId() + "; Username: " + user.getUsername());
+                        }
+                        println("\nChoose ids of users you want to add: ");
+                        final String idsString = in.readLine();
+                        List<Long> ids = new ArrayList<>();
+                        for (String id : idsString.split(",")) {
+                            ids.add(Long.parseLong(id));
+                        }
+                        print(ids);
                         break;
                     default:
                         println("\nUnknown command");

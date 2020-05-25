@@ -1,4 +1,4 @@
-package ua.nure.moleculis.emulator.http;
+package ua.nure.moleculis.emulator.http.models.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
